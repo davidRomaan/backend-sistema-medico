@@ -1,0 +1,17 @@
+{
+  "name": "backendadminpro",
+  "version": "1.0.0",
+  "description": "proyecto backen de admin pro gestion hospitales",
+  "main": "index.js",
+  "scripts": {
+    "start:dev": "nodemon index.js"
+  },
+  "author": "David Roman",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.12.15"
+  }
+}
