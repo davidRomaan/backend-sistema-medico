@@ -11,12 +11,20 @@ const { generateToken } = require('../helpers/jwt');
  */
 async function getUsers(req, res){
     
-    const users = await User.find({}, 'name email password role google');
+    //para recibir parametros desde la url lo hacemos con query:
+    const from = Number(req.query.from) || 0;
+
+    //podemos ejecutar varias promesas o varias consultas al mismo tiempo con Promise.all
+    const [users, total] = await Promise.all([
+        User.find({}, 'name email password role google img').skip(from).limit(5),
+        
+        User.countDocuments()
+    ])
 
     res.json({
         ok: true,
         users,
-        uid: req.uid
+        total
     })
 }
 
