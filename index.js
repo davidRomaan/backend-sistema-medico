@@ -15,6 +15,8 @@ app.use(express.json());
 //Base de datos
 dbConnection();
 
+app.use(express.static('public'));
+
 //Middlewares Rutas
 app.use('/api/users', require('./routes/users'));
 app.use('/api/login', require('./routes/auth'));

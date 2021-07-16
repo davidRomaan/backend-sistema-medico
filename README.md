@@ -11,6 +11,10 @@ subir proyecto a git la primera vez
 - escribimos en la terminal los comandos que nos indica al crear el repositorio como:
   git remote add origin https://github.com/davidRomaan/backend-sistema-medico.git, git branch -M main y git push -u origin main
 
+ver el link del proyecto en git
+
+- git remote -v
+
 obtener datos en el controlador:
 
 - por headers: const token = req.header('x-token');
