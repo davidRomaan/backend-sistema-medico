@@ -15,7 +15,8 @@ router.post('/', [validateToken, check('name', 'El nombre es obligatorio').not()
 check('hospital', 'El Id del hospital debe de ser valido').isMongoId(),validateFields], createMedic);
 
 
-router.put('/:id', [], updateMedic);
+router.put('/:id', [validateToken, check('name', 'El nombre es obligatorio').not().isEmpty(),
+check('hospital', 'El Id del hospital debe de ser valido').isMongoId(),validateFields], updateMedic);
 
 router.delete('/:id' ,deleteMedic);    
 

@@ -18,6 +18,9 @@ const MedicSchema = Schema({
         type: Schema.Types.ObjectId,
         ref: 'Hospital',
         required: true
+    },
+    deleted: {
+        type: Boolean
     }
 });
 

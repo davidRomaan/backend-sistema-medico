@@ -19,7 +19,8 @@ async function createHospitals(req, res=response) {
 
     const hospital = new Hospital({
         user: uid,
-        ...req.body
+        ...req.body,
+        deleted: false
     });
 
     try {
@@ -42,20 +43,70 @@ async function createHospitals(req, res=response) {
 
 async function updateHospitals(req, res=response) {
     
+    try {
+        
+        const id = req.params.id;
 
-    res.status(200).json({
-        ok: true,
-        msg: 'putHospitals'
-    })
+        const hospital = await Hospital.findById(id);
+
+        if (!hospital) { 
+            return res.status(404).json({
+                ok: false,
+                msg: 'No existe el hospital'
+            });
+        }
+
+        const params = {
+            ...req.body,
+            user: req.id
+        }
+
+        const updatedHospital = await Hospital.findByIdAndUpdate(id, params, { new: true });
+
+        res.status(200).json({
+            ok: true,
+            hospital: updatedHospital
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Error al editar el hospital'
+        })        
+    }
+
+
 }
 
 async function deleteHospitals(req, res=response) {
     
 
-    res.status(200).json({
-        ok: true,
-        msg: 'deleteHospitals'
-    })
+    try {
+        const id = req.params.id;
+
+        const hospital = await Hospital.findById(id);
+
+        if (!hospital) { 
+            return res.status(404).json({
+                ok: false,
+                msg: 'No existe el hospital'
+            });
+        }
+
+        hospital.deleted = true
+        hospital.save();
+
+        res.status(200).json({
+            ok: true,
+            msg: 'Hospital deshabilitado'
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Error al editar el hospital'
+        })        
+    }
 }
 module.exports = {
     getHospitals,

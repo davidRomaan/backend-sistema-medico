@@ -14,7 +14,7 @@
  router.post('/', [validateToken, check('name', 'El nombre debe de ser obligatorio').not().isEmpty(), validateFields], createHospitals);
  
  
- router.put('/:id', [], updateHospitals);
+ router.put('/:id', [validateToken, check('name', 'El nombre debe de ser obligatorio').not().isEmpty(), validateFields], updateHospitals);
  
  router.delete('/:id' ,deleteHospitals);
  
