@@ -13,7 +13,7 @@ async function login(req, res = response) {
         if (!user) {
             res.status(404).json({
                 ok: false,
-                msg: 'El email no es valido'
+                msg: 'El email o la contraseña no son validos'
             })
         }
 
@@ -29,13 +29,13 @@ async function login(req, res = response) {
         //generar token
         const token = await generateToken(user.id);
         
-        res.status(200).json({
+        return res.status(200).json({
             ok: true,
             token
         })
 
     } catch (error) {
-        res.status(401).json({
+        return res.status(401).json({
             ok: false,
             msg: 'Por favor hable con el administrador'
         })
@@ -61,7 +61,7 @@ async function googleSignIn(req, res = response) {
                 password: '123',
                 img: picture,
                 google: true
-            });
+            }); 
         } else {
             //existe el usuario
             newUser = userDB;
@@ -92,13 +92,25 @@ async function googleSignIn(req, res = response) {
 
 async function reNewToken(req, res = response) {
 
-    const uid = req.id
-    const token = await generateToken(uid);
+    try {
+        
+        const uid = req.id
+        const user = await User.findById(uid);
+        
+        const token = await generateToken(uid);
 
-    res.json({
-        ok: true,
-        token   
-    })
+        return res.json({
+            ok: true,
+            token,
+            user
+        })    
+    } catch (error) {
+        return res.json({
+            ok: false,
+            error
+        })    
+    }
+    
 }
 
 

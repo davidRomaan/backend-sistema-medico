@@ -33,7 +33,6 @@ async function getUsers(req, res){
  */
 async function createUser(req, res = response) {
     try {
-
         const { email, password } = req.body;
 
        
@@ -59,7 +58,7 @@ async function createUser(req, res = response) {
         const token = await generateToken(userCreated._id);
 
 
-        res.json({
+        return res.json({
             ok: true,
             user,
             token
@@ -67,7 +66,7 @@ async function createUser(req, res = response) {
 
     } catch (error) {
         console.log(error)
-        res.json({
+        return res.json({
             ok: false,
             msg: 'Error inesperado'
         })
@@ -104,10 +103,18 @@ async function updateUser(req, res = response) {
             }
         }
 
-        fields.email = email;
+        if (!user.google) {
+            fields.email = email;
+        } else if (user.email !== email) {
+            return res.status(500).json({
+                ok: false,
+                msg: 'Los usuarios de google no pueden cambiar su correo'
+            })
+        }
         const userUpdated = await User.findByIdAndUpdate(uid, fields, {new: true});
 
-        res.json({
+
+        return res.json({
             ok: true,
             user: userUpdated
         })
