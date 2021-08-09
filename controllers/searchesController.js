@@ -34,7 +34,7 @@ async function searchByCollection(req, res = response) {
     console.log(table);
     switch (table) {
         case 'medicos':
-             data = await Medic.find({ name: regex }).populate('user', 'name img').populate('hospital', 'name img');
+             data = await Medic.find({ name: regex, deleted: false }).populate('user', 'name img').populate('hospital', 'name img');
         break;
         case 'hospitales':
              data = await Hospital.find({ name: regex }).populate('user', 'name');

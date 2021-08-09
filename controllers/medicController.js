@@ -3,7 +3,7 @@ const Medic = require('../models/medic');
 
 async function getMedics(req, res=response) {
     
-    const medics = await Medic.find().populate('user', 'name img').populate('hospital', 'name');
+    const medics = await Medic.find({deleted: false}).populate('user', 'name img').populate('hospital', 'name');
 
     res.status(200).json({
         ok: true,
@@ -23,11 +23,11 @@ async function createMedic(req, res=response) {
             deleted: false
         })
 
-        const medico = await medic.save();
+        const newMedic = await medic.save();
 
-        res.status(500).json({
+        return res.status(200).json({
             ok: true,
-            medico
+            newMedic
         })
 
     } catch (error) {
@@ -95,7 +95,7 @@ async function deleteMedic(req, res=response) {
         medic.deleted = true;
         medic.save();
 
-        res.status(200).json({
+        return res.status(200).json({
             ok: true,
             msg: 'El medico se ha eliminado con éxito'
         });
@@ -105,12 +105,41 @@ async function deleteMedic(req, res=response) {
             ok: false,
             msg: 'Ocurrio un erorr al eliminar'
         })
-    }
-
+    }   
 }
+async function getMedicById(req, res = response) {
+    
+    const id = req.params.id
+    try {
+    const medic = await Medic.findById(id).populate('user', 'name img').
+        populate('hospital', 'name img').where({ deleted: false });
+        console.log(medic);
+    
+        if (!medic) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'El medico no existe'
+            })    
+        }
+
+        return res.status(200).json({
+            ok: true,
+            medic: medic
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Ocurrio un erorr'
+        })
+    }
+   
+}
+
 module.exports = {
     getMedics,
     createMedic,
     updateMedic,
-    deleteMedic
+    deleteMedic,
+    getMedicById
 }

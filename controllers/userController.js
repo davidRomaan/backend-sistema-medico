@@ -16,7 +16,7 @@ async function getUsers(req, res){
 
     //podemos ejecutar varias promesas o varias consultas al mismo tiempo con Promise.all
     const [users, total] = await Promise.all([
-        User.find({}, 'name email password role google img').skip(from).limit(5),
+        User.find({}, 'name email password role google img deleted').skip(from).limit(5),
         
         User.countDocuments()
     ])
@@ -140,12 +140,14 @@ async function deleteUser(req, res = response) {
             ok: false,
             msg: 'El usuario no existe'
         })
-    } 
-        await user.deleteOne();
+        }
+        
+        user.deleted = true;
+        await user.save();
     
-        res.status(200).json({
+        return res.status(200).json({
         ok: true,
-        msg: 'Usuario eliminado'
+        msg: 'Usuario deshabilitado'
     })
         
     } catch (error) {

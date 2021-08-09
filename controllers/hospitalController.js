@@ -4,7 +4,7 @@ const Hospital = require('../models/hospital');
 
 async function getHospitals(req, res=response) {
     
-    const hospitals = await Hospital.find().populate('user', 'name');
+    const hospitals = await Hospital.find({deleted: false}).populate('user', 'name');
 
 
     res.status(200).json({
@@ -14,7 +14,7 @@ async function getHospitals(req, res=response) {
 }
 
 async function createHospitals(req, res=response) {
-    
+        
     const uid = req.id;
 
     const hospital = new Hospital({
@@ -27,7 +27,7 @@ async function createHospitals(req, res=response) {
      
         const hospitalSaved = await hospital.save();
         
-        res.status(200).json({
+        return res.status(200).json({
             ok: true,
             hospital: hospitalSaved
         })
